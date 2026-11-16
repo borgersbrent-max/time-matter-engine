@@ -6,9 +6,18 @@ The first version (v0) simulates coupled phase oscillators that carry a conserve
 
 Every version is pre-registered: [v0](PREREGISTRATION.md), [v1](PREREGISTRATION-v1.md).
 
-## v1: calm, phase-locked regime (pre-registered, result pending)
+**So far, a structured lattice has not beaten its degree-matched random control, in either the chaotic regime (v0) or the calm one (v1).**
 
-v1 repeats the grid near synchronisation, with 30 seeds and T = 500. The goal is to remove the chaos that swamped v0. It tests two sealed predictions against each other: the torus is 15–25% more accurate, or linear mode theory's prediction of no difference. Run it with `python run_grid.py --preset v1 --name v1`.
+## v1 result: null, Prediction A ruled out
+
+From [results/v1/summary.md](results/v1/summary.md): calm phase-locked regime, 64 nodes, 30 seeds, T = 500, pre-registered in [PREREGISTRATION-v1.md](PREREGISTRATION-v1.md), sealed in commit `ad7d455` before the run.
+
+- **The regime was calm.** The Lyapunov exponent was 0.0066 on both graphs, about 100× lower than v0, and no edge's phase difference went above 0.6 rad. So the gate passed and the verdicts count.
+- **Primary test (leapfrog, projection off): ratio 1.056, 95% CI [0.986, 1.130], a null.** The torus is not more accurate.
+- **Prediction A (torus 15–25% more accurate, 0.75–0.85): ruled out.** The interval doesn't reach the band.
+- **Prediction B (linear mode theory, no difference, 0.95–1.05): consistent, not confirmed.** The interval overlaps the band but extends past 1.05.
+- **All four cells are nulls.** The point estimates are all slightly above 1 (1.06–1.10), so the torus is, if anything, a little worse. The cells share seeds, though, so this is one pattern seen four times, not four independent results. Taken at face value, it fits the torus's higher top frequency (λ_max = 8 vs 7.35), and testing it needs more seeds.
+- Energy drift doesn't differ either (ratio 0.997). Charge is conserved to round-off.
 
 ## v0 result: null
 
