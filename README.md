@@ -6,9 +6,9 @@ The first version (v0) simulates coupled phase oscillators that carry a conserve
 
 Every version is pre-registered: [v0](PREREGISTRATION.md), [v1](PREREGISTRATION-v1.md). Results are logged in [LEDGER.md](LEDGER.md).
 
-**v2 (pre-registered, result pending):** [PREREGISTRATION-v2.md](PREREGISTRATION-v2.md) tests whether feedback from an E8-symmetric bulk, through the H4 projection, suppresses phase slips on the torus more than random or PCA projections do. Run it with `python run_v2.py --name v2`.
+**v2 result: null.** [PREREGISTRATION-v2.md](PREREGISTRATION-v2.md) tested whether feedback from an E8-symmetric bulk, through the exact H4 projection, suppresses phase slips on the torus more than random or PCA projections do. It doesn't: E8 ÷ random was 0.947, CI [0.853, 1.051], and E8 ÷ PCA was 1.037, CI [0.966, 1.114]. What E8 does differently is fully explained by its torque's correlation time. See [results/v2/summary.md](results/v2/summary.md) and the [ledger](LEDGER.md). Run it with `python run_v2.py --name v2`.
 
-**So far, a structured lattice has not beaten its degree-matched random control, in either the chaotic regime (v0) or the calm one (v1).**
+**So far, structure has never beaten its matched control. The torus lattice lost to a shuffled graph, in the chaotic regime (v0) and the calm one (v1). The E8/H4 projection lost to random and PCA projections (v2).**
 
 ## v1 result: null, Prediction A ruled out
 
