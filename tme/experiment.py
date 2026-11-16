@@ -36,6 +36,15 @@ class Config:
     base_seed: int = 0
     integrators: tuple = ("leapfrog", "rk4")
     lyapunov: bool = True      # estimate each topology's largest Lyapunov exponent
+    init: str = "uniform"      # "uniform": random phases (v0); "locked": small spread around sync (v1)
+    theta_scale: float = 0.1   # std of initial phases when init == "locked"
+
+
+# Each preregistered version is a named config, so old runs stay reproducible.
+PRESETS = {
+    "v0": Config(),
+    "v1": Config(init="locked", theta_scale=0.1, p_scale=0.1, steps=10000, seeds=30, ref_factor=8),
+}
 
 
 def build_graphs(cfg: Config, topology: str) -> np.ndarray:
@@ -53,7 +62,13 @@ def initial_state(cfg: Config):
     th, p, q = [], [], []
     for s in range(cfg.seeds):
         rng = np.random.default_rng(cfg.base_seed + s)
-        th.append(rng.uniform(-np.pi, np.pi, N))
+        if cfg.init == "uniform":
+            th.append(rng.uniform(-np.pi, np.pi, N))
+        elif cfg.init == "locked":
+            t = rng.normal(0.0, cfg.theta_scale, N)
+            th.append(t - t.mean())
+        else:
+            raise ValueError(f"unknown init {cfg.init!r}")
         pp = rng.normal(0.0, cfg.p_scale, N)
         p.append(pp - pp.mean())  # zero total momentum, so projection keeps it zero
         q.append(rng.uniform(0.5, 1.5, N))
@@ -76,6 +91,30 @@ def _run(cfg, nbr, state, stepper, dt, n_sub, project, E0):
         if step % cfg.check_every == 0:
             traj.append((th.copy(), p.copy(), q.copy()))
     return traj, fails
+
+
+def laplacian_spectrum(nbr):
+    """Per seed: (largest Laplacian eigenvalue, spectral gap). Depends on the graph only."""
+    S, N, _ = nbr.shape
+    lmax, gap = [], []
+    for s in range(S):
+        A = np.zeros((N, N))
+        np.add.at(A, (np.repeat(np.arange(N), nbr.shape[2]), nbr[s].ravel()), 1.0)
+        ev = np.sort(np.linalg.eigvalsh(np.diag(A.sum(1)) - A))
+        lmax.append(ev[-1])
+        gap.append(ev[1])
+    return lmax, gap
+
+
+def max_edge_phase_diff(traj, nbr):
+    """Largest |theta_i - theta_j| over any edge and any checkpoint, per seed.
+    Below pi/2 everywhere means the run stayed phase-locked (no phase slips)."""
+    S, N, k = nbr.shape
+    best = np.zeros(S)
+    for th, _, _ in traj:
+        nb = np.take_along_axis(th, nbr.reshape(S, N * k), axis=1).reshape(S, N, k)
+        best = np.maximum(best, np.abs(wrap(th[:, :, None] - nb)).max(axis=(1, 2)))
+    return best
 
 
 def traj_error(a, b):
@@ -135,8 +174,14 @@ def run_grid(cfg: Config, progress=print) -> dict:
         # The reference is only trusted while it agrees with a finer reference
         # to well inside the tolerance used for scoring.
         ref_horizon = valid_time(ref_self, times, cfg.tol / 10)
+        lmax, gap = laplacian_spectrum(nbr)
         topo_info = {
             "reference_horizon": ref_horizon.tolist(),
+            # reference vs finer reference at the final time, per seed
+            "reference_final_error": ref_self[-1].tolist(),
+            "max_edge_phase_diff": max_edge_phase_diff(ref, nbr).tolist(),
+            "laplacian_max": lmax,
+            "spectral_gap": gap,
             "E0": E0.tolist(),
         }
         if cfg.lyapunov:

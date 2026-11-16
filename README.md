@@ -4,7 +4,11 @@ A sandbox for testing whether structure in a simulation's graph improves long-ho
 
 The first version (v0) simulates coupled phase oscillators that carry a conserved charge on a 4-regular graph. It compares a 2D torus lattice with the same lattice shuffled once (same degree for every node), under two integrators, with and without energy projection. Everything is scored against a high-precision reference run.
 
-See [PREREGISTRATION.md](PREREGISTRATION.md) for the hypothesis and success test. Those were agreed and coded before the first run.
+Every version is pre-registered: [v0](PREREGISTRATION.md), [v1](PREREGISTRATION-v1.md).
+
+## v1: calm, phase-locked regime (pre-registered, result pending)
+
+v1 repeats the grid near synchronisation, with 30 seeds and T = 500. The goal is to remove the chaos that swamped v0. It tests two sealed predictions against each other: the torus is 15–25% more accurate, or linear mode theory's prediction of no difference. Run it with `python run_grid.py --preset v1 --name v1`.
 
 ## v0 result: null
 
@@ -27,7 +31,7 @@ From [results/baseline-v0/summary.md](results/baseline-v0/summary.md): 64 nodes,
 
 ```bash
 pip install -r requirements.txt
-python -m pytest -q            # 14 tests: graphs, conservation, convergence order, projection
+python -m pytest -q            # graphs, conservation, convergence order, projection, stats
 python run_grid.py --quick     # ~2 s smoke run
 python run_grid.py --name my-run --seeds 20 --steps 8000   # full grid, ~4 min at defaults
 ```
@@ -48,6 +52,5 @@ Run `python run_grid.py --help` to see every parameter. Results are written to `
 
 ## Next steps
 
-1. Run 30+ seeds to settle whether the leapfrog gap is real.
-2. Move to a non-chaotic regime (low energy, phase-locked), where long-horizon drift is a numerical question rather than a chaos question.
-3. Add the pieces left out of v0 (6D bulk coordinates, the projection operator F, discrete rewiring events) one at a time, each under the same controls.
+1. v1b: sweep energy from the calm regime up to the v0 setting.
+2. Add the pieces left out of v0 (6D bulk coordinates, the projection operator F, discrete rewiring events) one at a time, each under the same controls.
