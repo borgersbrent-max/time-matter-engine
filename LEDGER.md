@@ -2,6 +2,8 @@
 
 One entry per pre-registered test, added after the result is in. A seal commit
 is the commit that pre-registered the test; it was pushed before the run.
+The write-up of v0 to v2 is in [NEGATIVE-RESULTS.md](NEGATIVE-RESULTS.md).
+
 Entries are never edited after the fact, except to fix a typo. Corrections go
 in a new entry.
 

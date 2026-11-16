@@ -4,7 +4,7 @@ A sandbox for testing whether structure in a simulation's graph improves long-ho
 
 The first version (v0) simulates coupled phase oscillators that carry a conserved charge on a 4-regular graph. It compares a 2D torus lattice with the same lattice shuffled once (same degree for every node), under two integrators, with and without energy projection. Everything is scored against a high-precision reference run.
 
-Every version is pre-registered: [v0](PREREGISTRATION.md), [v1](PREREGISTRATION-v1.md). Results are logged in [LEDGER.md](LEDGER.md).
+Every version is pre-registered: [v0](PREREGISTRATION.md), [v1](PREREGISTRATION-v1.md). Results are logged in [LEDGER.md](LEDGER.md) and written up in [NEGATIVE-RESULTS.md](NEGATIVE-RESULTS.md).
 
 **v2 result: null.** [PREREGISTRATION-v2.md](PREREGISTRATION-v2.md) tested whether feedback from an E8-symmetric bulk, through the exact H4 projection, suppresses phase slips on the torus more than random or PCA projections do. It doesn't: E8 ÷ random was 0.947, CI [0.853, 1.051], and E8 ÷ PCA was 1.037, CI [0.966, 1.114]. What E8 does differently is fully explained by its torque's correlation time. See [results/v2/summary.md](results/v2/summary.md) and the [ledger](LEDGER.md). Run it with `python run_v2.py --name v2`.
 
