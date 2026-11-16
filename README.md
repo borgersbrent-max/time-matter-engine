@@ -4,7 +4,7 @@ A sandbox for testing whether structure in a simulation's graph improves long-ho
 
 The first version (v0) simulates coupled phase oscillators that carry a conserved charge on a 4-regular graph. It compares a 2D torus lattice with the same lattice shuffled once (same degree for every node), under two integrators, with and without energy projection. Everything is scored against a high-precision reference run.
 
-Every version is pre-registered: [v0](PREREGISTRATION.md), [v1](PREREGISTRATION-v1.md).
+Every version is pre-registered: [v0](PREREGISTRATION.md), [v1](PREREGISTRATION-v1.md). Results are logged in [LEDGER.md](LEDGER.md).
 
 **So far, a structured lattice has not beaten its degree-matched random control, in either the chaotic regime (v0) or the calm one (v1).**
 
